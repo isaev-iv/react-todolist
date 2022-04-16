@@ -97,14 +97,33 @@ body {
         box-shadow: 0 0 2px #c2c2c2;
         border: 1px solid rgb(212, 209, 209);
         align-items:center;
+
+        &_checkbox {
+            input {
+                display: none;
+            }
+            label {
+                cursor:pointer;
+                display: inline-block;
+                border: 2px solid #e8e8e8;
+                border-radius: 20px;
+                width: 20px;
+                height: 20px;
+            }
+            input:checked + label {
+                background-color: #4dd599;
+                border-color: #4dd599;
+            }
+        }
     }
     
-    &__list_input {
+    &__list_input { 
+        color: #000000;
         padding: 15px;
         border:0;
         font-size: 18px;
         width: 90%;
-        
+        font-weight: normal;    
     }
     
     &__button {
@@ -128,9 +147,22 @@ body {
     }
 
     &__trash * {
-        fill: #c80404;
+        fill: #888888;
+        opacity: 0.7;
     }
-
+    &__trash:hover * {
+        fill: #c80404;
+        opacity: 0.8;
+    }
+    &__redact * {
+        fill: #5e5e5e;
+        opacity: 0.7;
+    }
+    &__redact:hover * {
+        fill: #01b009;
+        opacity: 0.9;
+    }
+ 
    
 }
 
