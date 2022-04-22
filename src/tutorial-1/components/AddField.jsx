@@ -1,49 +1,37 @@
 import React from "react";
+import { TextField, Button, Checkbox } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const Addfield = ({ onClickAdd }) => {
-  const [value, setValue] = React.useState("");
+export const AddField = ({ onAdd }) => {
+  const [inputValue, setInputValue] = React.useState("");
   const [checked, setChecked] = React.useState(false);
 
-  function onClick() {
-    onClickAdd(value, checked);
-    setValue("");
+  const onClickAdd = () => {
+    onAdd(inputValue, checked);
+    setInputValue("");
     setChecked(false);
-  }
+  };
   return (
-    <div className="item">
-      <div className="item__title">
-        <h3>Cписок задач</h3>
-      </div>
-      <div className="item__addBlock">
-        <input
-          onChange={() => setChecked((prev) => !prev)}
-          type="checkbox"
-          checked={checked}
-        />
-        <input
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-          type="text"
-          placeholder="Введите текст задачи..."
-          className="item__addInput"
-        />
-        <button onClick={onClick}>+</button>
-      </div>
-      <div>
-        <ul className="item__filter">
-          <li className="item__filter_active">
-            <button>ВСЕ</button>
-          </li>
-          <li>
-            <button>АКТИВНЫЕ</button>
-          </li>
-          <li>
-            <button>ЗАВЕРШЕННЫЕ</button>
-          </li>
-        </ul>
-      </div>
+    <div className="field">
+      <Checkbox
+        checked={checked}
+        onChange={(e) => setChecked(e.target.checked)}
+        className="checkbox"
+        icon={<RadioButtonUncheckedIcon />}
+        checkedIcon={<CheckCircleIcon />}
+      />
+      <TextField
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Введите текст задачи..."
+        variant="standard"
+        fullWidth
+      />
+      <Button onClick={onClickAdd}>
+        <AddIcon />
+      </Button>
     </div>
   );
 };
-
-export default Addfield;

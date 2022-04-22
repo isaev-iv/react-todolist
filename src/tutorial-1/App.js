@@ -1,70 +1,89 @@
-import "./App.scss";
-import React, { useReducer } from "react";
-import Item from "./components/Item.jsx";
-import AddField from "./components/AddField";
+import React from "react";
+import { Paper, Divider, Button, List, Tabs, Tab } from "@mui/material";
+import { AddField } from "./components/AddField";
+import { Item } from "./components/Item";
 
-function reducer(state, action) {
+const reducer = (state, action) => {
   if (action.type === "ADD_TASK") {
-    const newId = state.length + 1;
     return [
       ...state,
       {
-        id: newId,
+        id: state[state.length - 1].id + 1,
         text: action.payload.text,
         completed: action.payload.checked,
       },
     ];
   }
-  if (action.type === "CHANGE_TASK_STATUS") {
-    state.map((item) => {
-      if (item.id === action.payload) {
-        return { ...item, completed: !item.completed };
-      }
-    });
+  if (action.type === "DELETE_TASK") {
+    const newState = state.filter((item) => item.id !== action.payload);
+    return newState;
   }
   return state;
-}
+};
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, [
+  const [state, dispatch] = React.useReducer(reducer, [
     {
       id: 1,
-      text: "First task",
-      completed: false,
+      text: "Task #1",
+      completed: true,
     },
     {
       id: 2,
-      text: "Second task",
-      completed: false,
-    },
-    {
-      id: 3,
-      text: "Third task",
+      text: "Task #2",
       completed: false,
     },
   ]);
 
-  const onClickAdd = (text, checked) => {
+  const addTask = (text, checked) => {
     dispatch({
       type: "ADD_TASK",
       payload: {
-        text: text,
-        checked: checked,
+        text,
+        checked,
       },
     });
   };
 
-  const taskStatusChange = (id) => {
-    dispatch({
-      type: "CHANGE_TASK_STATUS",
-      payload: id,
-    });
+  const handleClickDelete = (id) => {
+    if (window.confirm("Are you really want to delete this task?")) {
+      dispatch({
+        type: "DELETE_TASK",
+        payload: id,
+      });
+    }
   };
 
   return (
-    <div className="app">
-      <AddField onClickAdd={onClickAdd} />
-      <Item tasks={state} taskStatusChange={taskStatusChange} />
+    <div className="App">
+      <Paper className="wrapper">
+        <Paper className="header" elevation={0}>
+          <h4>Список задач</h4>
+        </Paper>
+        <AddField onAdd={addTask} />
+        <Divider />
+        <Tabs value={0}>
+          <Tab label="Все" />
+          <Tab label="Активные" />
+          <Tab label="Завершённые" />
+        </Tabs>
+        <Divider />
+        <List>
+          {state.map((task) => (
+            <Item
+              key={task.id}
+              text={task.text}
+              completed={task.completed}
+              onDelete={() => handleClickDelete(task.id)}
+            />
+          ))}
+        </List>
+        <Divider />
+        <div className="check-buttons">
+          <Button>Отметить всё</Button>
+          <Button>Очистить</Button>
+        </div>
+      </Paper>
     </div>
   );
 }
