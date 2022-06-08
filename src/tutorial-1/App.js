@@ -8,7 +8,7 @@ const reducer = (state, action) => {
     return [
       ...state,
       {
-        id: state[state.length - 1].id + 1,
+        id: state.length !== 0 ? state[state.length - 1].id + 1 : 1,
         text: action.payload.text,
         completed: action.payload.checked,
       },
@@ -17,6 +17,15 @@ const reducer = (state, action) => {
   if (action.type === "DELETE_TASK") {
     const newState = state.filter((item) => item.id !== action.payload);
     return newState;
+  }
+  if (action.type === "REMOVE_ALL_TASKS") {
+    return [];
+  }
+  if (action.type === "COMPLETED_ALL_TASKS") {
+    const allCompleted = state.every((obj) => obj.completed === true);
+    return state.map((obj) => {
+      return { ...obj, completed: !allCompleted };
+    });
   }
   return state;
 };
@@ -43,6 +52,14 @@ function App() {
         checked,
       },
     });
+  };
+
+  const onClickRemove = () => {
+    if (window.confirm("Вы действительно хотите очистить список задач?")) {
+      dispatch({
+        type: "REMOVE_ALL_TASKS",
+      });
+    }
   };
 
   const handleClickDelete = (id) => {
